@@ -584,18 +584,24 @@
                 <div class="form-group">
                     <label for="citySelect"><i class="fas fa-city"></i> المدينة:</label>
                     <select id="citySelect" onchange="updatePrayerTimes()">
-                        <option value="paris">باريس - Paris</option>
-                        <option value="marseille">مرسيليا - Marseille</option>
-                        <option value="lyon">ليون - Lyon</option>
-                        <option value="toulouse">تولوز - Toulouse</option>
-                        <option value="montreal">مونتريال - Montréal</option>
-                        <option value="bruxelles">بروكسل - Bruxelles</option>
-                        <option value="geneve">جنيف - Genève</option>
+                        <option value="casablanca">الدار البيضاء - Casablanca</option>
+                        <option value="rabat" selected>الرباط - Rabat</option>
+                        <option value="marrakech">مراكش - Marrakech</option>
+                        <option value="fes">فاس - Fès</option>
+                        <option value="tanger">طنجة - Tanger</option>
+                        <option value="agadir">أكادير - Agadir</option>
+                        <option value="meknes">مكناس - Meknès</option>
                     </select>
                 </div>
                 
                 <div id="prayerTimesContainer">
                     <!-- Les horaires seront générés ici -->
+                </div>
+                
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="btn btn-small" onclick="updatePrayerTimesFromAPI()">
+                        <i class="fas fa-sync-alt"></i> تحديث من الإنترنت
+                    </button>
                 </div>
             </div>
         </section>
@@ -715,42 +721,112 @@
                 name: "الفجر", 
                 nameFr: "Fajr",
                 icon: "fas fa-sun", 
-                time: "05:30" 
+                time: "05:00" 
+            },
+            chorouq: { 
+                name: "الشروق", 
+                nameFr: "Chorouq",
+                icon: "fas fa-sunrise", 
+                time: "06:30" 
             },
             dhuhr: { 
                 name: "الظهر", 
                 nameFr: "Dhuhr",
                 icon: "fas fa-sun", 
-                time: "13:00" 
+                time: "13:15" 
             },
             asr: { 
                 name: "العصر", 
                 nameFr: "Asr",
                 icon: "fas fa-sun", 
-                time: "16:30" 
+                time: "16:45" 
             },
             maghrib: { 
                 name: "المغرب", 
                 nameFr: "Maghrib",
                 icon: "fas fa-moon", 
-                time: "18:45" 
+                time: "19:30" 
             },
             isha: { 
                 name: "العشاء", 
                 nameFr: "Isha",
                 icon: "fas fa-moon", 
-                time: "20:15" 
+                time: "20:45" 
             }
         };
         
+        // Horaires approximatifs pour différentes villes marocaines
         const cities = {
-            paris: { fajr: "06:00", dhuhr: "13:00", asr: "16:00", maghrib: "18:30", isha: "20:00" },
-            marseille: { fajr: "05:45", dhuhr: "13:15", asr: "16:45", maghrib: "19:00", isha: "20:30" },
-            lyon: { fajr: "05:50", dhuhr: "13:05", asr: "16:20", maghrib: "18:50", isha: "20:20" },
-            toulouse: { fajr: "06:10", dhuhr: "13:20", asr: "16:50", maghrib: "19:15", isha: "20:45" },
-            montreal: { fajr: "04:30", dhuhr: "12:45", asr: "16:15", maghrib: "19:30", isha: "21:00" },
-            bruxelles: { fajr: "05:55", dhuhr: "13:10", asr: "16:10", maghrib: "18:40", isha: "20:10" },
-            geneve: { fajr: "05:40", dhuhr: "13:05", asr: "16:15", maghrib: "18:45", isha: "20:15" }
+            casablanca: { 
+                name: "الدار البيضاء", 
+                nameFr: "Casablanca",
+                fajr: "05:00", 
+                chorouq: "06:30", 
+                dhuhr: "13:15", 
+                asr: "16:45", 
+                maghrib: "19:30", 
+                isha: "20:45" 
+            },
+            rabat: { 
+                name: "الرباط", 
+                nameFr: "Rabat",
+                fajr: "05:05", 
+                chorouq: "06:35", 
+                dhuhr: "13:20", 
+                asr: "16:50", 
+                maghrib: "19:35", 
+                isha: "20:50" 
+            },
+            marrakech: { 
+                name: "مراكش", 
+                nameFr: "Marrakech",
+                fajr: "05:10", 
+                chorouq: "06:40", 
+                dhuhr: "13:25", 
+                asr: "16:55", 
+                maghrib: "19:40", 
+                isha: "20:55" 
+            },
+            fes: { 
+                name: "فاس", 
+                nameFr: "Fès",
+                fajr: "05:00", 
+                chorouq: "06:30", 
+                dhuhr: "13:15", 
+                asr: "16:45", 
+                maghrib: "19:30", 
+                isha: "20:45" 
+            },
+            tanger: { 
+                name: "طنجة", 
+                nameFr: "Tanger",
+                fajr: "05:15", 
+                chorouq: "06:45", 
+                dhuhr: "13:30", 
+                asr: "17:00", 
+                maghrib: "19:45", 
+                isha: "21:00" 
+            },
+            agadir: { 
+                name: "أكادير", 
+                nameFr: "Agadir",
+                fajr: "05:20", 
+                chorouq: "06:50", 
+                dhuhr: "13:35", 
+                asr: "17:05", 
+                maghrib: "19:50", 
+                isha: "21:05" 
+            },
+            meknes: { 
+                name: "مكناس", 
+                nameFr: "Meknès",
+                fajr: "05:05", 
+                chorouq: "06:35", 
+                dhuhr: "13:20", 
+                asr: "16:50", 
+                maghrib: "19:35", 
+                isha: "20:50" 
+            }
         };
         
         const encouragements = [
@@ -788,38 +864,58 @@
                 arabic: "وما توفيقي إلا بالله",
                 french: "Ma réussite ne dépend que d'Allah",
                 reference: "سورة هود - 88"
+            },
+            {
+                arabic: "الله نور السموات والأرض",
+                french: "Allah est la lumière des cieux et de la terre",
+                reference: "سورة النور - 35"
+            },
+            {
+                arabic: "إِنَّ مَعَ الْعُسْرِ يُسْرًا",
+                french: "Certes, avec la difficulté vient la facilité",
+                reference: "سورة الشرح - 6"
+            },
+            {
+                arabic: "اللهم بارك لأهل المغرب في صلواتهم",
+                french: "Ô Allah, bénis le peuple marocain dans ses prières",
+                reference: "دعاء"
             }
         ];
         
         const spiritualMessages = [
             {
                 time: "fajr",
-                arabic: "بداية يوم جديد بنور الصلاة",
-                french: "Commencez votre nouvelle journée avec la lumière de la prière"
+                arabic: "اللهم بارك لأهل المغرب في فجرهم",
+                french: "Ô Allah, bénis le peuple marocain dans son aube"
+            },
+            {
+                time: "chorouq",
+                arabic: "شروق الشمس على بلاد المغرب",
+                french: "Le lever du soleil sur le Maroc"
             },
             {
                 time: "dhuhr",
-                arabic: "استراحة في منتصف النهار للقاء الله",
-                french: "Une pause en milieu de journée pour rencontrer Allah"
+                arabic: "ظهر اليوم في أرض الملوك والسعداء",
+                french: "Midi en terre de rois et de gens heureux"
             },
             {
                 time: "asr",
-                arabic: "وقت العصر.. وقت التذكر والشكر",
-                french: "L'heure de Al-Asr.. le moment de se souvenir et de remercier"
+                arabic: "عصر المغرب.. وقت الذكرى والدعاء",
+                french: "L'après-midi au Maroc.. moment de souvenir et d'invocation"
             },
             {
                 time: "maghrib",
-                arabic: "مغيب الشمس.. بداية لقاء جديد",
-                french: "Le coucher du soleil.. le début d'une nouvelle rencontre"
+                arabic: "مغيب الشمس على أرض المغرب الحبيب",
+                french: "Le coucher du soleil sur la terre chérie du Maroc"
             },
             {
                 time: "isha",
-                arabic: "الختام بلقاء الله قبل النوم",
-                french: "Terminez par la rencontre avec Allah avant de dormir"
+                arabic: "الختام بلقاء الله في ليلة مغربية",
+                french: "Terminez par la rencontre avec Allah dans une nuit marocaine"
             }
         ];
         
-        let currentCity = 'paris';
+        let currentCity = 'rabat';
         let todayPrayers = {};
         let currentPrayer = null;
         let nextPrayer = null;
@@ -838,6 +934,12 @@
         });
         
         function initApp() {
+            // Définir Rabat comme ville par défaut pour le Maroc
+            if (!localStorage.getItem('prayerCity')) {
+                localStorage.setItem('prayerCity', 'rabat');
+                currentCity = 'rabat';
+            }
+            
             const today = new Date().toDateString();
             prayedToday = JSON.parse(localStorage.getItem(`prayed_${today}`)) || {};
             calculateStreak();
@@ -861,13 +963,13 @@
         
         function updatePrayerTimes() {
             currentCity = document.getElementById('citySelect').value;
-            const cityTimes = cities[currentCity];
+            const cityData = cities[currentCity];
             
             todayPrayers = {};
             Object.keys(prayerNames).forEach(key => {
                 todayPrayers[key] = {
                     ...prayerNames[key],
-                    time: cityTimes[key]
+                    time: cityData[key]
                 };
             });
             
@@ -1289,7 +1391,7 @@
             const reminderTime = localStorage.getItem('reminderTime') || '10';
             document.getElementById('reminderTime').value = reminderTime;
             
-            const savedCity = localStorage.getItem('prayerCity') || 'paris';
+            const savedCity = localStorage.getItem('prayerCity') || 'rabat';
             document.getElementById('citySelect').value = savedCity;
             currentCity = savedCity;
         }
@@ -1319,12 +1421,84 @@
             }
         }
         
+        // ========== API D'HORAIRES DE PRIÈRE ==========
+        async function updatePrayerTimesFromAPI() {
+            const cityName = document.getElementById('citySelect').value;
+            const cityData = cities[cityName];
+            
+            try {
+                showEncouragementNotification('🔄 جاري تحديث مواقيت الصلاة...');
+                
+                const today = new Date();
+                const date = today.toISOString().split('T')[0]; // Format YYYY-MM-DD
+                
+                // Utilisation de l'API Aladhan
+                const response = await fetch(`https://api.aladhan.com/v1/timingsByCity/${date}?city=${cityData.nameFr}&country=Morocco&method=3`);
+                const data = await response.json();
+                
+                if (data.code === 200) {
+                    const timings = data.data.timings;
+                    
+                    // Mettre à jour les horaires
+                    todayPrayers = {
+                        fajr: { ...prayerNames.fajr, time: timings.Fajr },
+                        chorouq: { ...prayerNames.chorouq, time: timings.Sunrise },
+                        dhuhr: { ...prayerNames.dhuhr, time: timings.Dhuhr },
+                        asr: { ...prayerNames.asr, time: timings.Asr },
+                        maghrib: { ...prayerNames.maghrib, time: timings.Maghrib },
+                        isha: { ...prayerNames.isha, time: timings.Isha }
+                    };
+                    
+                    // Mettre à jour l'affichage
+                    updateCurrentPrayerDisplay();
+                    generateTodayPrayers();
+                    generatePrayerTimesTable();
+                    
+                    showEncouragementNotification('✅ تم تحديث مواقيت الصلاة بنجاح!');
+                }
+            } catch (error) {
+                console.error('Erreur lors de la récupération des horaires:', error);
+                showEncouragementNotification('⚠️ تعذر تحديث المواقيت، سيتم استخدام المواقيت المحلية');
+            }
+        }
+        
         // Ajouter l'animation slideOut
         const style = document.createElement('style');
         style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            
             @keyframes slideOut {
                 from { transform: translateX(0); opacity: 1; }
                 to { transform: translateX(100%); opacity: 0; }
+            }
+            
+            .calendar {
+                display: grid;
+                grid-template-columns: repeat(7, 1fr);
+                gap: 5px;
+                margin-top: 15px;
+            }
+            
+            .calendar-day {
+                padding: 10px;
+                text-align: center;
+                border-radius: 8px;
+                background: var(--white);
+                border: 1px solid var(--light-color);
+            }
+            
+            .calendar-day.today {
+                background: var(--primary-color);
+                color: white;
+                font-weight: bold;
+            }
+            
+            .calendar-day.prayed {
+                background: var(--light-color);
+                border-color: var(--accent-color);
             }
         `;
         document.head.appendChild(style);
