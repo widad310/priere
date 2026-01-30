@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Rappel de Prière - وقت اللقاء مع الله</title>
+    <meta name="description" content="Application pour ne jamais oublier le rendez-vous avec Allah">
+    <meta name="theme-color" content="#1a237e">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="manifest" href="app.webmanifest">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        :root {
+            --primary-color: #1a237e;
+            --secondary-color: #283593;
+            --accent-color: #3949ab;
+            --light-color: #e8eaf6;
+            --dark-color: #0d47a1;
+            --text-color: #1a237e;
+            --white: #FFFFFF;
+            --gold: #ffd700;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8eaf6 100%);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 20px;
+            padding-bottom: 80px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(26, 35, 126, 0.1);
+            border: 2px solid var(--light-color);
+        }
+        
+        .app-title {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .app-title i {
+            color: var(--gold);
+        }
+        
+        .app-subtitle {
+            color: var(--accent-color);
+            font-size: 1rem;
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+        
+        .spiritual-message {
+            background: linear-gradient(135deg, var(--light-color), #e3f2fd);
+            padding: 15px;
+            border-radius: 15px;
+            margin-top: 15px;
+            border-right: 4px solid var(--gold);
+        }
+        
+        .spiritual-message p {
+            margin: 5px 0;
+            font-size: 0.95rem;
+        }
+        
+        .arabic-text {
+            font-family: 'Traditional Arabic', 'Segoe UI', sans-serif;
+            font-size: 1.1rem;
+            color: var(--dark-color);
+            margin-bottom: 5px;
+        }
+        
+        /* Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--white);
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 10px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            border-top: 2px solid var(--light-color);
+        }
+        
+        .nav-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 0.75rem;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+        
+        .nav-btn i {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+        
+        .nav-btn.active {
+            color: var(--primary-color);
+            background: var(--light-color);
+        }
+        
+        /* Sections */
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Dashboard */
+        .dashboard {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(26, 35, 126, 0.1);
+            border: 2px solid var(--light-color);
+        }
+        
+        .current-prayer-time {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .prayer-time-display {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 20px 0;
+            font-family: monospace;
+        }
+        
+        .prayer-name {
+            font-size: 1.4rem;
+            color: var(--dark-color);
+            margin-bottom: 10px;
+        }
+        
+        .encouragement-banner {
+            background: linear-gradient(135deg, var(--light-color), #e3f2fd);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: center;
+            border-left: 5px solid var(--gold);
+        }
+        
+        .encouragement-text {
+            font-size: 1.1rem;
+            color: var(--dark-color);
+            margin-bottom: 10px;
+        }
+        
+        .encouragement-arabic {
+            font-family: 'Traditional Arabic', 'Segoe UI', sans-serif;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+        }
+        
+        /* Prayer Times */
+        .prayer-times-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .prayer-card {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .prayer-card.current {
+            border-color: var(--primary-color);
+            background: linear-gradient(135deg, var(--light-color), #e3f2fd);
+            transform: translateY(-5px);
+        }
+        
+        .prayer-card.passed {
+            opacity: 0.6;
+        }
+        
+        .prayer-card.passed .prayer-time {
+            color: #999;
+        }
+        
+        .prayer-icon {
+            font-size: 1.8rem;
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
+        
+        .prayer-name-card {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+        
+        .prayer-time {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        /* Reminders */
+        .reminder-settings {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(26, 35, 126, 0.1);
+            border: 2px solid var(--light-color);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--dark-color);
+            font-weight: 600;
+        }
+        
+        select, input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            background: var(--white);
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        /* Progress */
+        .progress-section {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(26, 35, 126, 0.1);
+            border: 2px solid var(--light-color);
+        }
+        
+        .streak-display {
+            text-align: center;
+            margin: 25px 0;
+        }
+        
+        .streak-number {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 10px 0;
+        }
+        
+        /* Motivational */
+        .motivational-section {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(26, 35, 126, 0.1);
+            border: 2px solid var(--light-color);
+        }
+        
+        .encouragement-card {
+            background: linear-gradient(135deg, var(--light-color), #e3f2fd);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            border-right: 5px solid var(--gold);
+        }
+        
+        .ayah-card {
+            margin-bottom: 25px;
+        }
+        
+        .ayah-arabic {
+            font-family: 'Traditional Arabic', 'Segoe UI', sans-serif;
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            text-align: right;
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+        
+        .ayah-translation {
+            font-size: 1rem;
+            color: var(--dark-color);
+            font-style: italic;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        
+        .ayah-reference {
+            color: var(--accent-color);
+            font-size: 0.9rem;
+        }
+        
+        /* Buttons */
+        .btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 10px auto;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(26, 35, 126, 0.2);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--accent-color), #5c6bc0);
+        }
+        
+        .btn-small {
+            padding: 8px 20px;
+            font-size: 0.9rem;
+        }
+        
+        /* Prayer status */
+        .status-badge {
+            display: inline-block;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-top: 10px;
+        }
+        
+        .status-pending {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+        
+        .status-prayed {
+            background: #e8f5e9;
+            color: var(--primary-color);
+        }
+        
+        /* Time until prayer */
+        .time-until {
+            background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+            padding: 15px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .prayer-times-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .prayer-time-display {
+                font-size: 2.5rem;
+            }
+            
+            .app-title {
+                font-size: 1.5rem;
+            }
+            
+            .ayah-arabic {
+                font-size: 1.2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .prayer-times-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .bottom-nav {
+                padding: 12px 5px;
+            }
+            
+            .nav-btn {
+                font-size: 0.7rem;
+                padding: 6px 10px;
+            }
+            
+            .nav-btn i {
+                font-size: 1rem;
+            }
+        }
+        
+        /* Loading animation */
+        .spinner {
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Floating action button */
+        .fab {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(26, 35, 126, 0.3);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Prayer alert */
+        .prayer-alert {
+            background: linear-gradient(135deg, #ffebee, #fce4ec);
+            border: 2px solid #f44336;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+        
+        .section-title {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title i {
+            color: var(--gold);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1 class="app-title">
+                <i class="fas fa-mosque"></i>
+                وقت اللقاء مع الله
+                <i class="fas fa-pray"></i>
+            </h1>
+            <p class="app-subtitle">Le temps de la rencontre avec Allah</p>
+            
+            <div class="spiritual-message">
+                <p class="arabic-text">"إن الصلاة كانت على المؤمنين كتابًا موقوتًا"</p>
+                <p>"Certes, la prière est pour les croyants une prescription à des temps déterminés"</p>
+                <p style="color: var(--accent-color); font-size: 0.9rem; margin-top: 10px;">
+                    <i class="fas fa-clock"></i> 
+                    <span id="currentDateTime"></span>
+                </p>
+            </div>
+        </div>
+        
+        <!-- Dashboard -->
+        <section id="dashboard" class="section active">
+            <div class="dashboard">
+                <div class="current-prayer-time">
+                    <div class="prayer-name" id="currentPrayerName">اللحظة الحالية</div>
+                    <div class="prayer-time-display" id="currentPrayerTime">--:--</div>
+                    <div id="countdown" style="color: var(--dark-color); font-size: 1.1rem;"></div>
+                    
+                    <div id="prayerStatus">
+                        <!-- Le statut s'affichera ici -->
+                    </div>
+                    
+                    <div class="encouragement-banner" id="dynamicEncouragement">
+                        <!-- Encouragement dynamique -->
+                    </div>
+                    
+                    <button class="btn" id="markPrayedBtn" onclick="markCurrentPrayerAsPrayed()" style="margin-top: 20px;">
+                        <i class="fas fa-check-circle"></i> لقد صليت - J'ai prié
+                    </button>
+                </div>
+                
+                <div class="time-until">
+                    <h3><i class="fas fa-hourglass-half"></i> وقت الصلاة القادمة</h3>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                        <span id="nextPrayerName">الصلوة القادمة</span>
+                        <span id="nextPrayerTime" style="font-weight: bold; color: var(--primary-color);">--:--</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Today's Prayers -->
+            <div class="dashboard">
+                <h2 class="section-title">
+                    <i class="fas fa-calendar-day"></i>
+                    صلوات اليوم
+                </h2>
+                <div class="prayer-times-grid" id="todayPrayers">
+                    <!-- Les cartes de prière seront générées ici -->
+                </div>
+            </div>
+        </section>
+        
+        <!-- Prayer Times -->
+        <section id="prayerTimes" class="section">
+            <div class="dashboard">
+                <h2 class="section-title">
+                    <i class="fas fa-clock"></i>
+                    مواقيت الصلاة
+                </h2>
+                
+                <div class="form-group">
+                    <label for="citySelect"><i class="fas fa-city"></i> المدينة:</label>
+                    <select id="citySelect" onchange="updatePrayerTimes()">
+                        <option value="paris">باريس - Paris</option>
+                        <option value="marseille">مرسيليا - Marseille</option>
+                        <option value="lyon">ليون - Lyon</option>
+                        <option value="toulouse">تولوز - Toulouse</option>
+                        <option value="montreal">مونتريال - Montréal</option>
+                        <option value="bruxelles">بروكسل - Bruxelles</option>
+                        <option value="geneve">جنيف - Genève</option>
+                    </select>
+                </div>
+                
+                <div id="prayerTimesContainer">
+                    <!-- Les horaires seront générés ici -->
+                </div>
+            </div>
+        </section>
+        
+        <!-- Reminders -->
+        <section id="reminders" class="section">
+            <div class="reminder-settings">
+                <h2 class="section-title">
+                    <i class="fas fa-bell"></i>
+                    التذكير
+                </h2>
+                
+                <div class="form-group">
+                    <label>تفعيل التنبيهات:</label>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="enableNotifications" onchange="toggleNotifications()">
+                        <label for="enableNotifications">تلقي تذكير قبل كل صلاة</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>التذكير قبل الصلاة:</label>
+                    <select id="reminderTime">
+                        <option value="5">5 دقائق قبل - 5 minutes avant</option>
+                        <option value="10" selected>10 دقائق قبل - 10 minutes avant</option>
+                        <option value="15">15 دقيقة قبل - 15 minutes avant</option>
+                        <option value="30">30 دقيقة قبل - 30 minutes avant</option>
+                    </select>
+                </div>
+                
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn" onclick="testNotification()">
+                        <i class="fas fa-volume-up"></i> تجربة التنبيه
+                    </button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Progress -->
+        <section id="progress" class="section">
+            <div class="progress-section">
+                <h2 class="section-title">
+                    <i class="fas fa-chart-line"></i>
+                    تقدمي
+                </h2>
+                
+                <div class="streak-display">
+                    <div class="streak-number" id="streakCount">0</div>
+                    <div class="streak-label">أيام متتالية من الصلاة</div>
+                    <p style="color: var(--accent-color); margin-top: 10px;">Jours consécutifs de prière</p>
+                </div>
+                
+                <div style="text-align: center; margin: 30px 0;">
+                    <button class="btn btn-secondary" onclick="showCalendar()">
+                        <i class="fas fa-calendar-alt"></i> عرض التقويم
+                    </button>
+                </div>
+                
+                <div id="calendarContainer" style="display: none;">
+                    <h3>تقويم الشهر</h3>
+                    <div class="calendar" id="prayerCalendar">
+                        <!-- Le calendrier sera généré ici -->
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Motivational -->
+        <section id="motivational" class="section">
+            <div class="motivational-section">
+                <h2 class="section-title">
+                    <i class="fas fa-heart"></i>
+                    التشجيع والإلهام
+                </h2>
+                
+                <div class="encouragement-card" id="encouragementContainer">
+                    <!-- Les encouragements seront générés ici -->
+                </div>
+                
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn" onclick="showRandomEncouragement()">
+                        <i class="fas fa-random"></i> كلمة تشجيع جديدة
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Floating Action Button -->
+    <button class="fab" onclick="showRandomEncouragement()" title="كلمة تشجيع">
+        <i class="fas fa-lightbulb"></i>
+    </button>
+    
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <button class="nav-btn active" onclick="switchSection('dashboard')">
+            <i class="fas fa-home"></i> الرئيسية
+        </button>
+        <button class="nav-btn" onclick="switchSection('prayerTimes')">
+            <i class="fas fa-clock"></i> المواقيت
+        </button>
+        <button class="nav-btn" onclick="switchSection('reminders')">
+            <i class="fas fa-bell"></i> التذكير
+        </button>
+        <button class="nav-btn" onclick="switchSection('progress')">
+            <i class="fas fa-chart-line"></i> التقدم
+        </button>
+        <button class="nav-btn" onclick="switchSection('motivational')">
+            <i class="fas fa-heart"></i> التشجيع
+        </button>
+    </div>
+
+    <script>
+        // ========== DONNÉES DE L'APPLICATION ==========
+        const prayerNames = {
+            fajr: { 
+                name: "الفجر", 
+                nameFr: "Fajr",
+                icon: "fas fa-sun", 
+                time: "05:30" 
+            },
+            dhuhr: { 
+                name: "الظهر", 
+                nameFr: "Dhuhr",
+                icon: "fas fa-sun", 
+                time: "13:00" 
+            },
+            asr: { 
+                name: "العصر", 
+                nameFr: "Asr",
+                icon: "fas fa-sun", 
+                time: "16:30" 
+            },
+            maghrib: { 
+                name: "المغرب", 
+                nameFr: "Maghrib",
+                icon: "fas fa-moon", 
+                time: "18:45" 
+            },
+            isha: { 
+                name: "العشاء", 
+                nameFr: "Isha",
+                icon: "fas fa-moon", 
+                time: "20:15" 
+            }
+        };
+        
+        const cities = {
+            paris: { fajr: "06:00", dhuhr: "13:00", asr: "16:00", maghrib: "18:30", isha: "20:00" },
+            marseille: { fajr: "05:45", dhuhr: "13:15", asr: "16:45", maghrib: "19:00", isha: "20:30" },
+            lyon: { fajr: "05:50", dhuhr: "13:05", asr: "16:20", maghrib: "18:50", isha: "20:20" },
+            toulouse: { fajr: "06:10", dhuhr: "13:20", asr: "16:50", maghrib: "19:15", isha: "20:45" },
+            montreal: { fajr: "04:30", dhuhr: "12:45", asr: "16:15", maghrib: "19:30", isha: "21:00" },
+            bruxelles: { fajr: "05:55", dhuhr: "13:10", asr: "16:10", maghrib: "18:40", isha: "20:10" },
+            geneve: { fajr: "05:40", dhuhr: "13:05", asr: "16:15", maghrib: "18:45", isha: "20:15" }
+        };
+        
+        const encouragements = [
+            {
+                arabic: "الصلاة عمود الدين",
+                french: "La prière est la colonne de la religion",
+                reference: "حديث نبوي"
+            },
+            {
+                arabic: "أقرب ما يكون العبد من ربه وهو ساجد",
+                french: "Le serviteur est au plus près de son Seigneur lorsqu'il est en prosternation",
+                reference: "حديث نبوي"
+            },
+            {
+                arabic: "إنما الأعمال بالنيات",
+                french: "Les actions ne valent que par leurs intentions",
+                reference: "حديث نبوي"
+            },
+            {
+                arabic: "الله في عون العبد ما كان العبد في عون أخيه",
+                french: "Allah aide le serviteur tant que le serviteur aide son frère",
+                reference: "حديث نبوي"
+            },
+            {
+                arabic: "اللهم إني أعوذ بك من الهم والحزن",
+                french: "Ô Allah, je cherche refuge auprès de Toi contre l'angoisse et la tristesse",
+                reference: "دعاء"
+            },
+            {
+                arabic: "رب اشرح لي صدري ويسر لي أمري",
+                french: "Seigneur, ouvre-moi la poitrine et facilite ma tâche",
+                reference: "سورة طه - 25-26"
+            },
+            {
+                arabic: "وما توفيقي إلا بالله",
+                french: "Ma réussite ne dépend que d'Allah",
+                reference: "سورة هود - 88"
+            }
+        ];
+        
+        const spiritualMessages = [
+            {
+                time: "fajr",
+                arabic: "بداية يوم جديد بنور الصلاة",
+                french: "Commencez votre nouvelle journée avec la lumière de la prière"
+            },
+            {
+                time: "dhuhr",
+                arabic: "استراحة في منتصف النهار للقاء الله",
+                french: "Une pause en milieu de journée pour rencontrer Allah"
+            },
+            {
+                time: "asr",
+                arabic: "وقت العصر.. وقت التذكر والشكر",
+                french: "L'heure de Al-Asr.. le moment de se souvenir et de remercier"
+            },
+            {
+                time: "maghrib",
+                arabic: "مغيب الشمس.. بداية لقاء جديد",
+                french: "Le coucher du soleil.. le début d'une nouvelle rencontre"
+            },
+            {
+                time: "isha",
+                arabic: "الختام بلقاء الله قبل النوم",
+                french: "Terminez par la rencontre avec Allah avant de dormir"
+            }
+        ];
+        
+        let currentCity = 'paris';
+        let todayPrayers = {};
+        let currentPrayer = null;
+        let nextPrayer = null;
+        let prayedToday = {};
+        let streak = 0;
+        
+        // ========== INITIALISATION ==========
+        document.addEventListener('DOMContentLoaded', function() {
+            initApp();
+            updateDateTime();
+            setInterval(updateDateTime, 60000);
+            setInterval(checkPrayerTimes, 60000);
+            loadSavedData();
+            updatePrayerTimes();
+            showRandomEncouragement();
+        });
+        
+        function initApp() {
+            const today = new Date().toDateString();
+            prayedToday = JSON.parse(localStorage.getItem(`prayed_${today}`)) || {};
+            calculateStreak();
+            document.getElementById('streakCount').textContent = streak;
+        }
+        
+        // ========== GESTION DU TEMPS ==========
+        function updateDateTime() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+            document.getElementById('currentDateTime').textContent = 
+                now.toLocaleDateString('fr-FR', options);
+        }
+        
+        function updatePrayerTimes() {
+            currentCity = document.getElementById('citySelect').value;
+            const cityTimes = cities[currentCity];
+            
+            todayPrayers = {};
+            Object.keys(prayerNames).forEach(key => {
+                todayPrayers[key] = {
+                    ...prayerNames[key],
+                    time: cityTimes[key]
+                };
+            });
+            
+            updatePrayerDisplay();
+            checkCurrentPrayer();
+            generatePrayerCards();
+        }
+        
+        function updatePrayerDisplay() {
+            if (!todayPrayers.fajr) return;
+            generateTodayPrayers();
+            generatePrayerTimesTable();
+        }
+        
+        // ========== AFFICHAGE DES PRIÈRES ==========
+        function generateTodayPrayers() {
+            const container = document.getElementById('todayPrayers');
+            container.innerHTML = '';
+            
+            Object.keys(todayPrayers).forEach(key => {
+                const prayer = todayPrayers[key];
+                const prayed = prayedToday[key] || false;
+                const isCurrent = currentPrayer === key;
+                const now = new Date();
+                const prayerTime = parseTime(prayer.time);
+                const isPassed = prayerTime < now;
+                
+                const card = document.createElement('div');
+                card.className = `prayer-card ${isCurrent ? 'current' : ''} ${isPassed ? 'passed' : ''}`;
+                card.innerHTML = `
+                    <div class="prayer-icon">
+                        <i class="${prayer.icon}"></i>
+                    </div>
+                    <div class="prayer-name-card">${prayer.name}<br><small>${prayer.nameFr}</small></div>
+                    <div class="prayer-time">${prayer.time}</div>
+                    ${prayed ? 
+                        '<div class="status-badge status-prayed"><i class="fas fa-check"></i> صليت</div>' : 
+                        isPassed ? 
+                        '<div class="status-badge status-pending"><i class="fas fa-clock"></i> فاتت</div>' :
+                        '<div class="status-badge status-pending"><i class="fas fa-clock"></i> قادمة</div>'
+                    }
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+        
+        function generatePrayerTimesTable() {
+            const container = document.getElementById('prayerTimesContainer');
+            container.innerHTML = '';
+            
+            Object.keys(todayPrayers).forEach(key => {
+                const prayer = todayPrayers[key];
+                const prayed = prayedToday[key] || false;
+                
+                const row = document.createElement('div');
+                row.style.cssText = `
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 15px;
+                    border-bottom: 1px solid #eee;
+                `;
+                row.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <i class="${prayer.icon}" style="color: var(--accent-color);"></i>
+                        <div>
+                            <div style="font-weight: 600;">${prayer.name}</div>
+                            <div style="font-size: 0.9rem; color: #666;">${prayer.nameFr}</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <span style="font-weight: bold; color: var(--primary-color);">${prayer.time}</span>
+                        ${prayed ? 
+                            '<i class="fas fa-check-circle" style="color: var(--accent-color);"></i>' : 
+                            '<i class="fas fa-clock" style="color: #ccc;"></i>'
+                        }
+                    </div>
+                `;
+                
+                container.appendChild(row);
+            });
+        }
+        
+        // ========== DÉTECTION DE LA PRIÈRE ==========
+        function checkPrayerTimes() {
+            const now = new Date();
+            let current = null;
+            let next = null;
+            
+            const prayerTimes = [];
+            Object.keys(todayPrayers).forEach(key => {
+                const timeStr = todayPrayers[key].time;
+                const time = parseTime(timeStr);
+                prayerTimes.push({
+                    key: key,
+                    name: todayPrayers[key].name,
+                    nameFr: todayPrayers[key].nameFr,
+                    time: time,
+                    timeStr: timeStr
+                });
+            });
+            
+            prayerTimes.sort((a, b) => a.time - b.time);
+            
+            for (let i = 0; i < prayerTimes.length; i++) {
+                const prayer = prayerTimes[i];
+                const nextPrayer = prayerTimes[(i + 1) % prayerTimes.length];
+                
+                if (now >= prayer.time && now < nextPrayer.time) {
+                    current = prayer.key;
+                    next = nextPrayer.key;
+                    break;
+                }
+            }
+            
+            if (!current) {
+                current = prayerTimes[prayerTimes.length - 1].key;
+                next = prayerTimes[0].key;
+            }
+            
+            currentPrayer = current;
+            nextPrayer = next;
+            
+            updateCurrentPrayerDisplay();
+            updateCountdown();
+            updateEncouragementBanner();
+        }
+        
+        function updateCurrentPrayerDisplay() {
+            if (!currentPrayer || !todayPrayers[currentPrayer]) return;
+            
+            const current = todayPrayers[currentPrayer];
+            const next = todayPrayers[nextPrayer];
+            
+            document.getElementById('currentPrayerName').textContent = `${current.name} - ${current.nameFr}`;
+            document.getElementById('currentPrayerTime').textContent = current.time;
+            document.getElementById('nextPrayerName').textContent = `${next.name} - ${next.nameFr}`;
+            document.getElementById('nextPrayerTime').textContent = next.time;
+            
+            const prayed = prayedToday[currentPrayer] || false;
+            const statusDiv = document.getElementById('prayerStatus');
+            if (prayed) {
+                statusDiv.innerHTML = `
+                    <div class="status-badge status-prayed" style="margin: 0 auto;">
+                        <i class="fas fa-check-circle"></i> صليت اليوم
+                    </div>
+                `;
+                document.getElementById('markPrayedBtn').style.display = 'none';
+            } else {
+                statusDiv.innerHTML = `
+                    <div class="status-badge status-pending" style="margin: 0 auto;">
+                        <i class="fas fa-clock"></i> في انتظار الصلاة
+                    </div>
+                `;
+                document.getElementById('markPrayedBtn').style.display = 'flex';
+            }
+        }
+        
+        function updateCountdown() {
+            if (!nextPrayer || !todayPrayers[nextPrayer]) return;
+            
+            const nextTime = parseTime(todayPrayers[nextPrayer].time);
+            const now = new Date();
+            
+            if (nextTime < now) {
+                nextTime.setDate(nextTime.getDate() + 1);
+            }
+            
+            const diff = nextTime - now;
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            
+            let countdownText = '';
+            if (hours > 0) {
+                countdownText = `${hours} ساعة و ${minutes} دقيقة`;
+            } else {
+                countdownText = `${minutes} دقيقة`;
+            }
+            
+            document.getElementById('countdown').innerHTML = `
+                <i class="fas fa-hourglass-half"></i> 
+                الصلاة القادمة بعد: <strong>${countdownText}</strong>
+                <br><small>Prochaine prière dans: ${hours}h ${minutes}m</small>
+            `;
+        }
+        
+        function updateEncouragementBanner() {
+            if (!currentPrayer) return;
+            
+            const message = spiritualMessages.find(m => m.time === currentPrayer) || 
+                          spiritualMessages[0];
+            
+            const banner = document.getElementById('dynamicEncouragement');
+            banner.innerHTML = `
+                <div class="encouragement-arabic">${message.arabic}</div>
+                <div class="encouragement-text">${message.french}</div>
+            `;
+        }
+        
+        function parseTime(timeStr) {
+            const [hours, minutes] = timeStr.split(':').map(Number);
+            const date = new Date();
+            date.setHours(hours, minutes, 0, 0);
+            return date;
+        }
+        
+        // ========== MARQUER LA PRIÈRE ==========
+        function markCurrentPrayerAsPrayed() {
+            if (!currentPrayer) return;
+            
+            prayedToday[currentPrayer] = true;
+            
+            const today = new Date().toDateString();
+            localStorage.setItem(`prayed_${today}`, JSON.stringify(prayedToday));
+            
+            updateCurrentPrayerDisplay();
+            generateTodayPrayers();
+            checkAndUpdateStreak();
+            
+            showEncouragementNotification('ماشاء الله! لقد صليت');
+            
+            if (navigator.vibrate) {
+                navigator.vibrate([100, 50, 100]);
+            }
+        }
+        
+        // ========== ENCOURAGEMENTS ==========
+        function showRandomEncouragement() {
+            const randomIndex = Math.floor(Math.random() * encouragements.length);
+            const encouragement = encouragements[randomIndex];
+            
+            const container = document.getElementById('encouragementContainer');
+            container.innerHTML = `
+                <div class="ayah-card">
+                    <div class="ayah-arabic">${encouragement.arabic}</div>
+                    <div class="ayah-translation">${encouragement.french}</div>
+                    <div class="ayah-reference">${encouragement.reference}</div>
+                </div>
+            `;
+            
+            showEncouragementNotification(encouragement.arabic);
+        }
+        
+        function showEncouragementNotification(message) {
+            // Créer une notification visuelle
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+                color: white;
+                padding: 15px 25px;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                z-index: 1001;
+                animation: slideIn 0.3s ease;
+                max-width: 300px;
+            `;
+            notification.innerHTML = `
+                <div style="font-size: 1.1rem; margin-bottom: 5px;">${message}</div>
+                <div style="font-size: 0.9rem; opacity: 0.9;"><i class="fas fa-heart"></i> بارك الله فيك</div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+        
+        // ========== PROGRÈS ==========
+        function calculateStreak() {
+            streak = 0;
+            const today = new Date();
+            
+            for (let i = 0; i < 30; i++) {
+                const date = new Date(today);
+                date.setDate(date.getDate() - i);
+                const dateKey = date.toDateString();
+                const prayedData = JSON.parse(localStorage.getItem(`prayed_${dateKey}`)) || {};
+                const prayerCount = Object.values(prayedData).filter(v => v).length;
+                
+                if (prayerCount >= 1) {
+                    streak++;
+                } else {
+                    break;
+                }
+            }
+        }
+        
+        function checkAndUpdateStreak() {
+            calculateStreak();
+            document.getElementById('streakCount').textContent = streak;
+            
+            if (streak === 7) {
+                showEncouragementNotification('🎉 مبروك! 7 أيام متتالية من الصلاة!');
+            } else if (streak === 30) {
+                showEncouragementNotification('🌟 رائع! 30 يومًا متتاليًا من الصلاة!');
+            }
+        }
+        
+        function showCalendar() {
+            const container = document.getElementById('calendarContainer');
+            const calendar = document.getElementById('prayerCalendar');
+            
+            if (container.style.display === 'none') {
+                generateCalendar();
+                container.style.display = 'block';
+            } else {
+                container.style.display = 'none';
+            }
+        }
+        
+        function generateCalendar() {
+            const calendar = document.getElementById('prayerCalendar');
+            calendar.innerHTML = '';
+            
+            // Jours de la semaine
+            const days = ['أح', 'إث', 'ث', 'أر', 'خ', 'ج', 'س'];
+            days.forEach(day => {
+                const dayEl = document.createElement('div');
+                dayEl.className = 'calendar-day';
+                dayEl.textContent = day;
+                dayEl.style.background = 'var(--light-color)';
+                calendar.appendChild(dayEl);
+            });
+            
+            // Jours du mois
+            const today = new Date();
+            const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+            const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+            
+            for (let i = 0; i < firstDay.getDay(); i++) {
+                const empty = document.createElement('div');
+                empty.className = 'calendar-day';
+                empty.style.visibility = 'hidden';
+                calendar.appendChild(empty);
+            }
+            
+            for (let day = 1; day <= lastDay.getDate(); day++) {
+                const dayEl = document.createElement('div');
+                dayEl.className = 'calendar-day';
+                dayEl.textContent = day;
+                
+                if (day === today.getDate()) {
+                    dayEl.classList.add('today');
+                }
+                
+                const date = new Date(today.getFullYear(), today.getMonth(), day);
+                const dateKey = date.toDateString();
+                const prayedData = JSON.parse(localStorage.getItem(`prayed_${dateKey}`)) || {};
+                const prayerCount = Object.values(prayedData).filter(v => v).length;
+                
+                if (prayerCount >= 1) {
+                    dayEl.classList.add('prayed');
+                }
+                
+                calendar.appendChild(dayEl);
+            }
+        }
+        
+        // ========== NOTIFICATIONS ==========
+        function toggleNotifications() {
+            const enabled = document.getElementById('enableNotifications').checked;
+            
+            if (enabled && 'Notification' in window) {
+                if (Notification.permission === 'default') {
+                    Notification.requestPermission().then(permission => {
+                        if (permission === 'granted') {
+                            showEncouragementNotification('🔔 تم تفعيل التنبيهات!');
+                        }
+                    });
+                } else if (Notification.permission === 'granted') {
+                    showEncouragementNotification('🔔 تم تفعيل التنبيهات!');
+                }
+            }
+            
+            localStorage.setItem('notificationsEnabled', enabled);
+        }
+        
+        function testNotification() {
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification('تذكير الصلاة', {
+                    body: 'حان وقت صلاة الفجر!',
+                    icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🕌</text></svg>',
+                    tag: 'prayer-reminder'
+                });
+                
+                showEncouragementNotification('🔔 تم إرسال تنبيه تجريبي!');
+            } else {
+                showEncouragementNotification('يرجى السماح بالإشعارات في إعدادات المتصفح');
+            }
+        }
+        
+        // ========== NAVIGATION ==========
+        function switchSection(sectionId) {
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            
+            window.scrollTo(0, 0);
+            
+            // Si on va dans la section encouragement, montrer un nouveau message
+            if (sectionId === 'motivational') {
+                showRandomEncouragement();
+            }
+        }
+        
+        // ========== SAUVEGARDE ==========
+        function loadSavedData() {
+            const notificationsEnabled = localStorage.getItem('notificationsEnabled') === 'true';
+            document.getElementById('enableNotifications').checked = notificationsEnabled;
+            
+            const reminderTime = localStorage.getItem('reminderTime') || '10';
+            document.getElementById('reminderTime').value = reminderTime;
+            
+            const savedCity = localStorage.getItem('prayerCity') || 'paris';
+            document.getElementById('citySelect').value = savedCity;
+            currentCity = savedCity;
+        }
+        
+        // Écouter les changements
+        document.getElementById('reminderTime').addEventListener('change', function() {
+            localStorage.setItem('reminderTime', this.value);
+        });
+        
+        document.getElementById('citySelect').addEventListener('change', function() {
+            localStorage.setItem('prayerCity', this.value);
+        });
+        
+        // ========== FONCTIONS UTILITAIRES ==========
+        function checkCurrentPrayer() {
+            // Simuler un appel pour initialiser
+            setTimeout(() => {
+                checkPrayerTimes();
+            }, 100);
+        }
+        
+        function generatePrayerCards() {
+            if (Object.keys(todayPrayers).length > 0) {
+                generateTodayPrayers();
+                generatePrayerTimesTable();
+                checkCurrentPrayer();
+            }
+        }
+        
+        // Ajouter l'animation slideOut
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Initialisation
+        setTimeout(() => {
+            generatePrayerCards();
+            showRandomEncouragement();
+        }, 100);
+    </script>
+</body>
+</html>
